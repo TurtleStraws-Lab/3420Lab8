@@ -14,7 +14,6 @@ if (
 
     $db = get_pdo_connection();
 
-    // Fetch stored hashed password
     $query = $db->prepare("SELECT password FROM User WHERE username = :username");
     $query->bindParam(':username', $currentUsername, PDO::PARAM_STR);
     $query->execute();
@@ -22,10 +21,8 @@ if (
     $realPassword = $query->fetch(PDO::FETCH_ASSOC);
 
     if ($realPassword && $currentPassword === $realPassword['password']) {
-        // Hash new password
         $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
 
-        // Update password
         $updateQuery = $db->prepare("UPDATE User SET password = :newPassword WHERE username = :username");
         $updateQuery->bindParam(':newPassword', $hashedNewPassword, PDO::PARAM_STR);
         $updateQuery->bindParam(':username', $currentUsername, PDO::PARAM_STR);
