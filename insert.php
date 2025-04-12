@@ -7,20 +7,23 @@ if (
       !empty($_POST["insert_username"]) &&
       !empty($_POST["insert_email"]) &&
       !empty($_POST["insert_password"]) &&
-      !empty($_POST["insert_birthday"])
+      !empty($_POST["insert_birthday"]) &&
+      !empty($_POST["insert_AdminID"])
     ) {
-    $usernameToInsert = htmlspecialchars($_POST["insert_username"]);
-    $emailToInsert = htmlspecialchars($_POST["insert_email"]);
-    $passwordToInsert = htmlspecialchars($_POST["insert_password"]);
-    $birthdayToInsert = htmlspecialchars($_POST["insert_birthday"]);
+    $username = htmlspecialchars($_POST["insert_username"]);
+    $email = htmlspecialchars($_POST["insert_email"]);
+    $password = htmlspecialchars($_POST["insert_password"]);
+    $birthday = htmlspecialchars($_POST["insert_birthday"]);
+    $adminid = htmlspecialchars($_POST["insert_AdminID"]);
 
     $db = get_pdo_connection();
     $query = $db->prepare("insert into User (username, email, password, DOB)
                           values (:username, :email, :password, :DOB)");
-    $query->bindParam(':username', $usernameToInsert, PDO::PARAM_STR);
-    $query->bindParam(':email', $emailToInsert, PDO::PARAM_STR);
-    $query->bindParam(':password', $passwordToInsert, PDO::PARAM_STR);
-    $query->bindParam(':DOB', $birthdayToInsert, PDO::PARAM_STR);
+    $query->bindParam(':username', $username, PDO::PARAM_STR);
+    $query->bindParam(':email', $email, PDO::PARAM_STR);
+    $query->bindParam(':password', $password, PDO::PARAM_STR);
+    $query->bindParam(':DOB', $birthday, PDO::PARAM_STR);
+    $query->bindParam(':AdminID', $adminid, PDO::PARAM_STR);
 
     if (!$query->execute()) {    
         $insertMsg =  "Error executing insert query:<br>" . print_r($query->errorInfo(), true);
@@ -34,7 +37,7 @@ require_once("main.php");
 
 ?>
 
-<h2>Create A User</h2>
+<h2>Create An Admin User</h2>
 
 <?php
 
@@ -49,5 +52,6 @@ if (!empty($insertMsg)) {
         <label>email: <input type="email" name="insert_email"></label><br>
         <label>password: <input type="password" name="insert_password"></label><br>
         <label>birthday: <input type="date" name="insert_birthday"></label><br>
+        <label>admin ID: <input type="number" name="insert_adminID"></label><br>
         <input type="submit" name="submit" value="Submit">
     </form>
